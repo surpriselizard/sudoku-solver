@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class Application {
 
+	private final int SUDOKU_SIZE = 9;
 	private int[][] inputGraph;
 	private int[][] outputGraph;
 	
@@ -20,7 +21,16 @@ public class Application {
 
 		while(!solved && !unSolvable) {
 			
-			// TODO		
+			for (int y = 0; y < SUDOKU_SIZE; ++y) {
+				
+				for (int x = 0; x < SUDOKU_SIZE; ++x) {
+				
+					if (intputGraph[y][x] == 0) {
+
+						// TODO
+					}
+				}
+			}
 		}
 	}
 
