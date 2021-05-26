@@ -27,7 +27,9 @@ public class Application {
 				
 					if (intputGraph[y][x] == 0) {
 
-						// TODO
+						if (isCompatibleX(x, inputGraph[y][x]) && isCompatibleY(y, inputGraph[y][x]) && isCompatibleBlock(x, y, inputGraph[y][x])) {
+
+						}
 					}
 				}
 			}
@@ -50,4 +52,98 @@ public class Application {
 
 		return tempGraph;
 	}
+
+	public boolean isCompatibleX(int xValue, int value) {
+
+		for (int yValue = 0; yValue < SUDOKU_SIZE; ++yValue) {
+
+			if (inputGraph[yValue][xValue] == value)
+				return false;
+		}
+
+		return true;
+	}
+
+	public boolean isCompatibleY(int yValue, int value) {
+		
+		for (int xValue = 0; xValue < SUDOKU_SIZE; ++xValue) {
+
+			if (inputGraph[yValue][xValue] == value)
+				return false;
+		}
+
+		return true;
+	}
+
+	public boolean isCompatibleBlock(int xValue, int yValue, int value) {
+
+		boolean isInFirstColumn = (xValue > 0 && xValue < 3);
+		boolean isInSecondColumn = (xValue > 2 && xValue < 6);
+		boolean isInThirdColumn = (xValue > 5 && xValue < 9);
+
+		boolean isInFirstRow = (yValue > 0 && yValue < 3);
+		boolean isInSecondRow = (yValue > 2 && yValue < 6);
+		boolean isInThirdRow = (yValue > 5 && yValue < 9);
+
+		if (isInFirstColumn && isInFirstRow) {
+
+			return childBoxCheck(0, 2, 0, 2, value);
+		}
+
+		if (isInFirstColumn && isInSecondRow) {
+
+			return childBoxCheck(0, 2, 3, 5, value);
+		}
+
+		if (isInFirstColumn && isInThirdRow) {
+
+			return childBoxCheck(0, 2, 6, 8, value);
+		}
+
+		if (isInSecondColumn && isInFirstRow) {
+
+			return childBoxCheck(3, 5, 0, 2, value);
+		}
+
+		if (isInSecondColumn && isInSecondRow) {
+
+			return childBoxCheck(3, 5, 3, 5, value);
+		}
+
+		if (isInSecondColumn && isInThridRow) {
+
+			return childBoxCheck(3, 5, 6, 8, value);
+		}
+
+		if (isInThridColumn && isInFirstRow) {
+
+			return childBoxCheck(6, 8, 0, 2, value);
+		}
+
+		if (isInThirdColumn && isInSecondRow) {
+
+			return childBoxCheck(6, 8, 3, 5, value);
+		}
+
+		if (isInThridColumn && isInThirdRow) {
+
+			return childBoxCheck(6, 8, 6, 8, value);
+		}
+	}
+
+	private boolean childBoxCheck(int xMin, int xMax, int yMin, int yMax, int valueNum) {
+
+		for (int h = yMin; h <= yMax; ++h) {
+
+			for (int w = xMin; w <= xMax; ++w) {
+
+				if (inputGraph[h][w] == valueNum) {
+
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 }
