@@ -4,7 +4,7 @@ public class Action {
 	private int x;
 	private int y;
 
-	public Action(int number, int xCoor, int yCoor) {
+	public Action(int xCoor, int yCoor, int number) {
 
 		value = number;
 		x = xCoor;

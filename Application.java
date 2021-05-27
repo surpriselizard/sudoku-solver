@@ -15,11 +15,11 @@ public class Application {
 
 	public int[][] solveInput() {
 		
-		ArrayList<Action> actions = new ArrayList<Action>(1);
+		ArrayList<Action> actions = new ArrayList<Action>();
 		boolean solved = false;
 		boolean unSolvable = false;
 
-		while(!solved && !unSolvable) {
+		while(!solved || !unSolvable) {
 			
 			for (int y = 0; y < SUDOKU_SIZE; ++y) {
 				
@@ -27,8 +27,18 @@ public class Application {
 				
 					if (intputGraph[y][x] == 0) {
 
-						if (isCompatibleX(x, inputGraph[y][x]) && isCompatibleY(y, inputGraph[y][x]) && isCompatibleBlock(x, y, inputGraph[y][x])) {
+						for (int i = 0; i < SUDOKU_SIZE; ++i) {
+							
+							if (isCompatibleX(x, i) && isCompatibleY(y, i) && isCompatibleBlock(x, y, i)) {
 
+								actions.add(new Action(x, y, value));
+								break;
+							}
+
+							else {
+
+								
+							}
 						}
 					}
 				}
