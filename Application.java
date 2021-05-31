@@ -18,32 +18,45 @@ public class Application {
 		ArrayList<Action> actions = new ArrayList<Action>();
 		boolean solved = false;
 		boolean unSolvable = false;
+		boolean actionFound = false;
 
-		while(!solved || !unSolvable) {
+		int i;
+
+		for (int y = 0; y < SUDOKU_SIZE; ++y) {
 			
-			for (int y = 0; y < SUDOKU_SIZE; ++y) {
-				
-				for (int x = 0; x < SUDOKU_SIZE; ++x) {
-				
-					if (intputGraph[y][x] == 0) {
+			for (int x = 0; x < SUDOKU_SIZE; ++x) {
+			
+				if (inputGraph[y][x] == 0) {
 
-						for (int i = 0; i < SUDOKU_SIZE; ++i) {
-							
-							if (isCompatibleX(x, i) && isCompatibleY(y, i) && isCompatibleBlock(x, y, i)) {
-
-								actions.add(new Action(x, y, value));
-								break;
-							}
-
-							else {
-
-								
-							}
+					for (i = 0; i < SUDOKU_SIZE; ++i) {
+						
+						if (isCompatibleX(x, i) && isCompatibleY(y, i) && isCompatibleBlock(x, y, i)) {
+							actionFound = true;
+							actions.add(new Action(x, y, value));
+							break;
 						}
+					}
+
+					if (!actionFound) {
+
+						if ((actions.size() - 1) < 0) {
+
+							unSolvable = true;
+							break;
+						}
+						
+						y = actions[actions.size() - 1].getY();
+						x = actions[actions.size() - 1].getX();
+						i = actions[actions.size() - 1].getValue() + 1;
 					}
 				}
 			}
 		}
+
+		if (unSolvable)
+			return null;
+		if (solved)
+			return applyActionsTo(inputGraph, actions);
 	}
 
 	private int[][] initializeInput() {
@@ -63,7 +76,21 @@ public class Application {
 		return tempGraph;
 	}
 
-	public boolean isCompatibleX(int xValue, int value) {
+	private int[][] applyActionsTo(int[][] graph, ArrayList<Action> acts) {
+
+		for (Action act : acts) {
+			
+			// Checking if Actions are compatible with the given graph
+			if (graph[act.getY()][act.getX()] != 0) 
+				return null;
+			else 
+				graph[act.getY()][act.getX()] = act.getValue();
+		}
+
+		return graph;
+	}
+
+	private boolean isCompatibleX(int xValue, int value) {
 
 		for (int yValue = 0; yValue < SUDOKU_SIZE; ++yValue) {
 
@@ -74,7 +101,7 @@ public class Application {
 		return true;
 	}
 
-	public boolean isCompatibleY(int yValue, int value) {
+	private boolean isCompatibleY(int yValue, int value) {
 		
 		for (int xValue = 0; xValue < SUDOKU_SIZE; ++xValue) {
 
@@ -85,7 +112,7 @@ public class Application {
 		return true;
 	}
 
-	public boolean isCompatibleBlock(int xValue, int yValue, int value) {
+	private boolean isCompatibleBlock(int xValue, int yValue, int value) {
 
 		boolean isInFirstColumn = (xValue > 0 && xValue < 3);
 		boolean isInSecondColumn = (xValue > 2 && xValue < 6);
