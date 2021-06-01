@@ -11,6 +11,11 @@ public class Application {
 		inputGraph = initializeInput();
 
 		outputGraph = solveInput();
+
+		if (outputGraph != null) 
+			printGraph(outputGraph);
+		else 
+			System.out.println("Could not find a solution to the sudoku puzzle.");
 	}
 
 	public int[][] solveInput() {
@@ -32,7 +37,7 @@ public class Application {
 						
 						if (isCompatibleX(x, i) && isCompatibleY(y, i) && isCompatibleBlock(x, y, i)) {
 							actionFound = true;
-							actions.add(new Action(x, y, value));
+							actions.add(new Action(x, y, i));
 							break;
 						}
 					}
@@ -42,38 +47,54 @@ public class Application {
 						if ((actions.size() - 1) < 0) {
 
 							unSolvable = true;
+							System.out.println("X: " + x);
+							System.out.println("Y: " + y);
 							break;
 						}
 						
-						y = actions[actions.size() - 1].getY();
-						x = actions[actions.size() - 1].getX();
-						i = actions[actions.size() - 1].getValue() + 1;
+						y = actions.get(actions.size() - 1).getY();
+						x = actions.get(actions.size() - 1).getX();
+						i = actions.get(actions.size() - 1).getValue() + 1;
 					}
 				}
 			}
 		}
 
-		if (unSolvable)
-			return null;
 		if (solved)
 			return applyActionsTo(inputGraph, actions);
+		else 
+			return null;
 	}
 
 	private int[][] initializeInput() {
 		
-		int[][] tempGraph = new int[9][9] {
-			{0, 0, 3, 0, 0, 0, 1, 0, 8},
-			{8, 0, 0, 0, 9, 3, 6, 0, 0},
-			{9, 0, 2, 1, 0, 0, 3, 0, 4},
-			{2, 0, 0, 0, 1, 0, 0, 7, 0},
-			{0, 0, 4, 0, 2, 0, 9, 0, 0},
-			{0, 9, 0, 0, 6, 0, 0, 0, 5},
-			{4, 0, 9, 0, 0, 1, 5, 0, 2},
-			{0, 0, 8, 2, 5, 0, 0, 0, 9},
-			{7, 0, 5, 0, 0, 0, 4, 0, 0}
-		}
+		int[][] tempGraph = new int[][] {
+			{0, 6, 0,  0, 0, 8,  0, 0, 0},
+			{4, 0, 0,  0, 0, 3,  0, 6, 0},
+			{0, 0, 0,  6, 0, 5,  9, 0, 0},
+
+			{6, 9, 0,  7, 3, 0,  0, 0, 0},
+			{0, 4, 0,  0, 0, 0,  6, 3, 0},
+			{5, 0, 0,  8, 6, 0,  0, 0, 2},
+
+			{0, 1, 0,  0, 2, 0,  0, 8, 6},
+			{3, 0, 0,  0, 0, 6,  2, 5, 0},
+			{0, 0, 6,  0, 0, 7,  0, 0, 0}
+		};
 
 		return tempGraph;
+	}
+
+	private void printGraph(int[][] graph) {
+
+		for (int y = 0; y < SUDOKU_SIZE; ++y) {
+
+			for (int x = 0; x < SUDOKU_SIZE; ++x) {
+
+				System.out.print(graph[y][x] + " ");
+			}
+			System.out.println();
+		}
 	}
 
 	private int[][] applyActionsTo(int[][] graph, ArrayList<Action> acts) {
@@ -147,12 +168,12 @@ public class Application {
 			return childBoxCheck(3, 5, 3, 5, value);
 		}
 
-		if (isInSecondColumn && isInThridRow) {
+		if (isInSecondColumn && isInThirdRow) {
 
 			return childBoxCheck(3, 5, 6, 8, value);
 		}
 
-		if (isInThridColumn && isInFirstRow) {
+		if (isInThirdColumn && isInFirstRow) {
 
 			return childBoxCheck(6, 8, 0, 2, value);
 		}
@@ -162,10 +183,13 @@ public class Application {
 			return childBoxCheck(6, 8, 3, 5, value);
 		}
 
-		if (isInThridColumn && isInThirdRow) {
+		if (isInThirdColumn && isInThirdRow) {
 
 			return childBoxCheck(6, 8, 6, 8, value);
 		}
+
+		else 
+			return false;
 	}
 
 	private boolean childBoxCheck(int xMin, int xMax, int yMin, int yMax, int valueNum) {
