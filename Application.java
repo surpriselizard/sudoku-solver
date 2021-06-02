@@ -31,9 +31,11 @@ public class Application {
 			
 			for (int x = 0; x < SUDOKU_SIZE; ++x) {
 			
-				if (inputGraph[y][x] == 0) {
+				actionFound = false;
 
-					for (i = 0; i < SUDOKU_SIZE; ++i) {
+				if (inputGraph[y][x] == 0) {
+					
+					for (i = 1; i < SUDOKU_SIZE + 1; ++i) {
 						
 						if (isCompatibleX(x, i) && isCompatibleY(y, i) && isCompatibleBlock(x, y, i)) {
 							actionFound = true;
@@ -47,8 +49,6 @@ public class Application {
 						if ((actions.size() - 1) < 0) {
 
 							unSolvable = true;
-							System.out.println("X: " + x);
-							System.out.println("Y: " + y);
 							break;
 						}
 						
@@ -58,6 +58,9 @@ public class Application {
 					}
 				}
 			}
+			
+			if (unSolvable)
+				break;
 		}
 
 		if (solved)
@@ -113,12 +116,18 @@ public class Application {
 
 	private boolean isCompatibleX(int xValue, int value) {
 
+		// int yValue;
+
 		for (int yValue = 0; yValue < SUDOKU_SIZE; ++yValue) {
 
-			if (inputGraph[yValue][xValue] == value)
+			if (inputGraph[yValue][xValue] == value) {
+
+				// System.out.println("xValue: " + xValue + " yValue: " + yValue + " value: " + value + " return: false");
 				return false;
+			}
 		}
 
+		// System.out.println("xValue: " + xValue + " yValue: " + yValue + " value: " + value + " return: true");
 		return true;
 	}
 
@@ -135,11 +144,11 @@ public class Application {
 
 	private boolean isCompatibleBlock(int xValue, int yValue, int value) {
 
-		boolean isInFirstColumn = (xValue > 0 && xValue < 3);
+		boolean isInFirstColumn = (xValue >= 0 && xValue < 3);
 		boolean isInSecondColumn = (xValue > 2 && xValue < 6);
 		boolean isInThirdColumn = (xValue > 5 && xValue < 9);
 
-		boolean isInFirstRow = (yValue > 0 && yValue < 3);
+		boolean isInFirstRow = (yValue >= 0 && yValue < 3);
 		boolean isInSecondRow = (yValue > 2 && yValue < 6);
 		boolean isInThirdRow = (yValue > 5 && yValue < 9);
 
