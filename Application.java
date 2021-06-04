@@ -4,32 +4,28 @@ public class Application {
 
 	private final int SUDOKU_SIZE = 9;
 	private int[][] inputGraph;
-	private int[][] outputGraph;
 	
 	public Application() {
 		
 		inputGraph = initializeInput();
 
-		outputGraph = solveInput();
+		solveInput();
 
-		if (outputGraph != null) 
-			printGraph(outputGraph);
-		else 
-			System.out.println("Could not find a solution to the sudoku puzzle.");
+		printGraph(inputGraph);
 	}
 
-	public int[][] solveInput() {
+	public void solveInput() {
 		
 		ArrayList<Action> actions = new ArrayList<Action>();
 		boolean solved = false;
 		boolean unSolvable = false;
 		boolean actionFound = false;
 
-		int i;
+		int x, y, i;
 
-		for (int y = 0; y < SUDOKU_SIZE; ++y) {
+		for (y = 0; y < SUDOKU_SIZE; ++y) {
 			
-			for (int x = 0; x < SUDOKU_SIZE; ++x) {
+			for (x = 0; x < SUDOKU_SIZE; ++x) {
 			
 				actionFound = false;
 
@@ -37,6 +33,8 @@ public class Application {
 					
 					for (i = 1; i < SUDOKU_SIZE + 1; ++i) {
 						
+						refreshGraph(inputGraph, actions);
+
 						if (isCompatibleX(x, i) && isCompatibleY(y, i) && isCompatibleBlock(x, y, i)) {
 							actionFound = true;
 							actions.add(new Action(x, y, i));
@@ -45,16 +43,31 @@ public class Application {
 					}
 
 					if (!actionFound) {
+						
+						int lastIndex = actions.size() - 1;
 
-						if ((actions.size() - 1) < 0) {
+						if (lastIndex < 0) {
 
 							unSolvable = true;
 							break;
 						}
 						
-						y = actions.get(actions.size() - 1).getY();
-						x = actions.get(actions.size() - 1).getX();
-						i = actions.get(actions.size() - 1).getValue() + 1;
+						// Removing action since it does not lead to the solution
+						if (x == actions.get(lastIndex).getX() && y == actions.get(lastIndex).getY()) {
+
+							actions.remove(lastIndex);
+
+							// Checking if we are out of actions since we just deleted one
+							if (lastIndex < 0) {
+
+								unSolvable = true;
+								break;
+							}
+						}
+
+						x = actions.get(lastIndex).getX();
+						y = actions.get(lastIndex).getY();
+						i = actions.get(lastIndex).getValue() + 1;
 					}
 				}
 			}
@@ -63,10 +76,10 @@ public class Application {
 				break;
 		}
 
-		if (solved)
-			return applyActionsTo(inputGraph, actions);
-		else 
-			return null;
+		refreshGraph(inputGraph, actions);
+
+		if (unSolvable)
+			System.out.println("Graph is unsolvable.");
 	}
 
 	private int[][] initializeInput() {
@@ -99,35 +112,49 @@ public class Application {
 			System.out.println();
 		}
 	}
-
-	private int[][] applyActionsTo(int[][] graph, ArrayList<Action> acts) {
+	
+	private void applyActionsTo(int[][] graph, ArrayList<Action> acts) {
 
 		for (Action act : acts) {
 			
 			// Checking if Actions are compatible with the given graph
-			if (graph[act.getY()][act.getX()] != 0) 
-				return null;
+			if (graph[act.getY()][act.getX()] != 0) {
+
+				System.out.println("Problem with 'applyActionsTo'");
+				return;
+			}
 			else 
 				graph[act.getY()][act.getX()] = act.getValue();
 		}
+	}
 
-		return graph;
+	private void refreshGraph(int[][] graph, ArrayList<Action> acts) {
+
+		graph = initializeInput();
+		applyActionsTo(graph, acts);
+	}
+
+	private void applyActionTo(int[][] graph, Action act) {
+			
+		if (graph[act.getY()][act.getX()] != 0) {
+
+			System.out.println("Problem with 'applyActionTo'");
+			return;
+		}
+		else
+			graph[act.getY()][act.getX()] = act.getValue();
 	}
 
 	private boolean isCompatibleX(int xValue, int value) {
-
-		// int yValue;
 
 		for (int yValue = 0; yValue < SUDOKU_SIZE; ++yValue) {
 
 			if (inputGraph[yValue][xValue] == value) {
 
-				// System.out.println("xValue: " + xValue + " yValue: " + yValue + " value: " + value + " return: false");
 				return false;
 			}
 		}
 
-		// System.out.println("xValue: " + xValue + " yValue: " + yValue + " value: " + value + " return: true");
 		return true;
 	}
 
@@ -214,6 +241,18 @@ public class Application {
 			}
 		}
 		return true;
+	}
+
+	// DEBUG FUNCTION
+	private void makeGraphZeros(int[][] graph) {
+
+		for (int yV = 0; yV < SUDOKU_SIZE; ++yV) {
+
+			for (int xV = 0; xV < SUDOKU_SIZE; ++xV) {
+
+				graph[yV][xV] = 0;
+			}
+		}
 	}
 
 }
