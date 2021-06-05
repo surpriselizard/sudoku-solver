@@ -33,7 +33,7 @@ public class Application {
 					
 					for (i = 1; i < SUDOKU_SIZE + 1; ++i) {
 						
-						refreshGraph(inputGraph, actions);
+						applyActionsTo(inputGraph, actions);
 
 						if (isCompatibleX(x, i) && isCompatibleY(y, i) && isCompatibleBlock(x, y, i)) {
 							actionFound = true;
@@ -76,7 +76,7 @@ public class Application {
 				break;
 		}
 
-		refreshGraph(inputGraph, actions);
+		applyActionsTo(inputGraph, actions);
 
 		if (unSolvable)
 			System.out.println("Graph is unsolvable.");
@@ -115,23 +115,8 @@ public class Application {
 	
 	private void applyActionsTo(int[][] graph, ArrayList<Action> acts) {
 
-		for (Action act : acts) {
-			
-			// Checking if Actions are compatible with the given graph
-			if (graph[act.getY()][act.getX()] != 0) {
-
-				System.out.println("Problem with 'applyActionsTo'");
-				return;
-			}
-			else 
-				graph[act.getY()][act.getX()] = act.getValue();
-		}
-	}
-
-	private void refreshGraph(int[][] graph, ArrayList<Action> acts) {
-
-		graph = initializeInput();
-		applyActionsTo(graph, acts);
+		for (Action act : acts)
+			graph[act.getY()][act.getX()] = act.getValue();
 	}
 
 	private void applyActionTo(int[][] graph, Action act) {
