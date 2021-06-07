@@ -21,7 +21,8 @@ public class Application {
 		boolean unSolvable = false;
 		boolean actionFound = false;
 
-		int x, y, i;
+		int x, y;
+		int i = 1;
 
 		for (y = 0; y < SUDOKU_SIZE; ++y) {
 			
@@ -31,13 +32,14 @@ public class Application {
 
 				if (inputGraph[y][x] == 0) {
 					
-					for (i = 1; i < SUDOKU_SIZE + 1; ++i) {
+					for (; i < SUDOKU_SIZE + 1; ++i) {
 						
 						applyActionsTo(inputGraph, actions);
 
 						if (isCompatibleX(x, i) && isCompatibleY(y, i) && isCompatibleBlock(x, y, i)) {
 							actionFound = true;
 							actions.add(new Action(x, y, i));
+							i = 1;
 							break;
 						}
 					}
@@ -52,17 +54,14 @@ public class Application {
 							break;
 						}
 						
-						// Removing action since it does not lead to the solution
-						if (x == actions.get(lastIndex).getX() && y == actions.get(lastIndex).getY()) {
+						actions.remove(lastIndex);
+						lastIndex = actions.size() - 1;
 
-							actions.remove(lastIndex);
+						// Checking if we are out of actions since we just deleted one
+						if (lastIndex < 0) {
 
-							// Checking if we are out of actions since we just deleted one
-							if (lastIndex < 0) {
-
-								unSolvable = true;
-								break;
-							}
+							unSolvable = true;
+							break;
 						}
 
 						x = actions.get(lastIndex).getX();
