@@ -23,19 +23,20 @@ public class Application {
 
 		int x, y;
 		int i = 1;
+		int currentCell = 0;
 
 		for (y = 0; y < SUDOKU_SIZE;) {
 			
 			for (x = 0; x < SUDOKU_SIZE;) {
 			
 				actionFound = false;
+				refreshGraph(inputGraph, actions);
+				currentCell = inputGraph[y][x];
 
-				if (inputGraph[y][x] == 0) {
+				if (currentCell == 0) {
 					
 					for (; i < SUDOKU_SIZE + 1; ++i) {
 						
-						applyActionsTo(inputGraph, actions);
-
 						if (isCompatibleX(x, i) && isCompatibleY(y, i) && isCompatibleBlock(x, y, i)) {
 							actionFound = true;
 							actions.add(new Action(x, y, i));
@@ -70,12 +71,20 @@ public class Application {
 						x = actions.get(lastIndex).getX();
 						y = actions.get(lastIndex).getY();
 						i = actions.get(lastIndex).getValue() + 1;
+
+						actions.remove(lastIndex);
 					}
 				}
+
+				else if (currentCell != 0)
+					++x;
 
 				if (actionFound)
 					++x;
 			}
+
+			if (currentCell != 0)
+				++y;
 
 			if (actionFound)
 				++y;
@@ -84,7 +93,7 @@ public class Application {
 				break;
 		}
 
-		applyActionsTo(inputGraph, actions);
+		refreshGraph(inputGraph, actions);
 
 		if (unSolvable)
 			System.out.println("Graph is unsolvable.");
@@ -93,17 +102,17 @@ public class Application {
 	private int[][] initializeInput() {
 		
 		int[][] tempGraph = new int[][] {
-			{0, 6, 0,  0, 0, 8,  0, 0, 0},
-			{4, 0, 0,  0, 0, 3,  0, 6, 0},
-			{0, 0, 0,  6, 0, 5,  9, 0, 0},
+			{0, 0, 0,  9, 0, 2,  0, 0, 0},
+			{0, 2, 8,  0, 4, 0,  1, 9, 0},
+			{4, 0, 0,  0, 0, 0,  0, 0, 7},
 
-			{6, 9, 0,  7, 3, 0,  0, 0, 0},
-			{0, 4, 0,  0, 0, 0,  6, 3, 0},
-			{5, 0, 0,  8, 6, 0,  0, 0, 2},
+			{0, 0, 3,  1, 0, 4,  6, 0, 0},
+			{0, 0, 0,  6, 0, 9,  0, 0, 0},
+			{0, 0, 1,  5, 0, 7,  4, 0, 0},
 
-			{0, 1, 0,  0, 2, 0,  0, 8, 6},
-			{3, 0, 0,  0, 0, 6,  2, 5, 0},
-			{0, 0, 6,  0, 0, 7,  0, 0, 0}
+			{1, 0, 0,  0, 0, 0,  0, 0, 8},
+			{0, 5, 9,  0, 7, 0,  3, 6, 0},
+			{0, 0, 0,  2, 0, 5,  0, 0, 0}
 		};
 
 		return tempGraph;
@@ -120,21 +129,20 @@ public class Application {
 			System.out.println();
 		}
 	}
-	
-	private void applyActionsTo(int[][] graph, ArrayList<Action> acts) {
+
+	private void refreshGraph(int[][] graph, ArrayList<Action> acts) {
+
+		int[][] temporaryGraph = initializeInput();
+
+		for (int yValue = 0; yValue < SUDOKU_SIZE; ++yValue) {
+
+			for (int xValue = 0; xValue < SUDOKU_SIZE; ++xValue) {
+
+				graph[yValue][xValue] = temporaryGraph[yValue][xValue];
+			}
+		}
 
 		for (Action act : acts)
-			graph[act.getY()][act.getX()] = act.getValue();
-	}
-
-	private void applyActionTo(int[][] graph, Action act) {
-			
-		if (graph[act.getY()][act.getX()] != 0) {
-
-			System.out.println("Problem with 'applyActionTo'");
-			return;
-		}
-		else
 			graph[act.getY()][act.getX()] = act.getValue();
 	}
 
