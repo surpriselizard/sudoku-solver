@@ -24,9 +24,9 @@ public class Application {
 		int x, y;
 		int i = 1;
 
-		for (y = 0; y < SUDOKU_SIZE; ++y) {
+		for (y = 0; y < SUDOKU_SIZE;) {
 			
-			for (x = 0; x < SUDOKU_SIZE; ++x) {
+			for (x = 0; x < SUDOKU_SIZE;) {
 			
 				actionFound = false;
 
@@ -54,14 +54,17 @@ public class Application {
 							break;
 						}
 						
-						actions.remove(lastIndex);
-						lastIndex = actions.size() - 1;
+						if (x == actions.get(lastIndex).getX() && y == actions.get(lastIndex).getY()) {
 
-						// Checking if we are out of actions since we just deleted one
-						if (lastIndex < 0) {
+							actions.remove(lastIndex);
+							lastIndex = actions.size() - 1;
 
-							unSolvable = true;
-							break;
+							// Checking if we are out of actions since we just deleted one
+							if (lastIndex < 0) {
+
+								unSolvable = true;
+								break;
+							}
 						}
 
 						x = actions.get(lastIndex).getX();
@@ -69,7 +72,13 @@ public class Application {
 						i = actions.get(lastIndex).getValue() + 1;
 					}
 				}
+
+				if (actionFound)
+					++x;
 			}
+
+			if (actionFound)
+				++y;
 			
 			if (unSolvable)
 				break;
