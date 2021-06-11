@@ -1,11 +1,17 @@
 import java.util.ArrayList;
 
-public class Application {
+/*
+ *	Version: 11/06/2021
+ *	- Added an accessor function for the 'inputGraph'
+ *	-
+ */
+
+public class Solver {
 
 	private final int SUDOKU_SIZE = 9;
 	private int[][] inputGraph;
 	
-	public Application() {
+	public Solver() {
 		
 		inputGraph = initializeInput();
 
@@ -244,6 +250,8 @@ public class Application {
 		return true;
 	}
 
+	public int[][] getInputGraph() { return inputGraph; }
+
 	// DEBUG FUNCTION
 	private void makeGraphZeros(int[][] graph) {
 
@@ -255,5 +263,4 @@ public class Application {
 			}
 		}
 	}
-
 }
