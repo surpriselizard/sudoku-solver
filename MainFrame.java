@@ -2,6 +2,8 @@ import javax.swing.JFrame;
 
 public class MainFrame extends JFrame {
 
+	private Board mainBoard;
+
 	public MainFrame() {
 
 		setup();
@@ -9,10 +11,10 @@ public class MainFrame extends JFrame {
 
 	private void setup() {
 
-		add(new Board());
+		add(mainBoard);
 
 		setResizable(false);
-		pack();
+		setSize(mainBoard.getWidth() + 50, mainBoard.getHeight() + 250);
 
 		setTitle("Sudoku Solver");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);

@@ -3,7 +3,9 @@ import java.util.ArrayList;
 /*
  *	Version: 11/06/2021
  *	- Added an accessor function for the 'inputGraph'
- *	-
+ *	
+ *	Version: 15/06/2021
+ *	- Overloaded 'initializeInput' with a function that is more easily used by other classes
  */
 
 public class Solver {
@@ -122,6 +124,17 @@ public class Solver {
 		};
 
 		return tempGraph;
+	}
+
+	public void initializeInput(int[][] graph) {
+
+		for (int y = 0; y < SUDOKU_SIZE; ++y) {
+			
+			for (int x = 0; x < SUDOKU_SIZE; ++x) {
+
+				inputGraph[y][x] = graph[y][x];
+			}
+		}
 	}
 
 	private void printGraph(int[][] graph) {

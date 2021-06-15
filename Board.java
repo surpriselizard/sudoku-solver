@@ -13,9 +13,12 @@ import javax.swing.ImageIcon;
  *	- Added some graphics functionality
  *	- Added initialization of some key objects
  *
+ *	Version: 15/06/2021
+ *	- Created drawNumbers which should draw all the numbers on the grid
+ *
  *	TODO
  *	- Add functionality for a thread to animate the algorithm.
- *	- Find a way to translate graph coordinates to component coordinates for numbers in the graph.
+ *	- Decide if this is going to be a full sudoku game or just a solver
  *
  *	^Note^ Here, grid means the graphical representation of the puzzle and graph means the int[][] in the 
  *	'Solver' class.
@@ -32,6 +35,9 @@ public class Board extends JPanel {
 	public Board() {
 
 		initBoard();
+
+		solver = new Solver();
+		puzzleGraph = Solver.getInputGraph();
 	}
 
 	private void initBoard() {
@@ -39,9 +45,6 @@ public class Board extends JPanel {
 		setFocusable(true);
 
 		loadImage();
-
-		solver = new Solver();
-		puzzleGraph = Solver.getInputGraph();
 	}
 
 	private void drawPuzzle(Graphics g) {
@@ -49,6 +52,22 @@ public class Board extends JPanel {
 		Graphics2D g2d = (Graphics2D) g;
 
 		drawImage(gridImg, 0, 0, Color.WHITE, this);
+	}
+
+	private void drawNumbers(Graphics g) {
+
+		Graphics2D g2d = (Graphics2D) g;
+
+		int numOffset = (G_WIDTH / 9) / 2;
+
+		// It is up to 9 beacuse that is the width/height of the array in terms of cells
+		for (int y = 0; y < 9; ++y) {
+
+			for (int x = 0; x < 9; ++x) {
+
+				drawString(String.toString(puzzleGraph[y][x]), (G_WIDTH / (x + 1)) - numOffset, (G_HEIGHT / (y+1)) - numOffset);
+			}
+		}
 	}
 
 	private void loadImage() {
@@ -66,7 +85,11 @@ public class Board extends JPanel {
 		super.paintComponent(g);
 
 		drawPuzzle(g);
+		drawNumbers(g);
 
 		Toolkit.getDefaultToolkit().sync();
 	}
+
+	public int getWidth() { return G_WIDTH; }
+	public int getHeight() { return G_HEIGHT; }
 }
