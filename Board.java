@@ -4,10 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 
 /*	Version: 10/06/2021
  *	- Create this file, with some boilerplate code
@@ -19,6 +16,9 @@ import javax.swing.JButton;
  *	Version: 15/06/2021
  *	- Created drawNumbers which should draw all the numbers on the grid
  *	- Started 'solveListener'
+ *
+ *	Version: 16/06/2021
+ *	- Removed the field 'puzzleGraph' since it could easily be replaced as a local variable
  *
  *	TODO
  *	- Add functionality for a thread to animate the algorithm.
@@ -33,14 +33,12 @@ public class Board extends JPanel {
 	private int G_HEIGHT;
 	private Solver solver;
 	private Image gridImg;
-	private int[][] puzzleGraph;
 
 	public Board() {
 
 		initBoard();
 
 		solver = new Solver();
-		puzzleGraph = Solver.getInputGraph();
 	}
 
 	private void initBoard() {
@@ -61,6 +59,7 @@ public class Board extends JPanel {
 
 		Graphics2D g2d = (Graphics2D) g;
 
+		int[][] puzzleGraph = solver.getInputGraph();
 		int numOffset = (G_WIDTH / 9) / 2;
 
 		// It is up to 9 beacuse that is the width/height of the array in terms of cells
@@ -91,14 +90,6 @@ public class Board extends JPanel {
 		drawNumbers(g);
 
 		Toolkit.getDefaultToolkit().sync();
-	}
-
-	public class solveListener extends ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-
-		}
 	}
 
 	public int getWidth() { return G_WIDTH; }

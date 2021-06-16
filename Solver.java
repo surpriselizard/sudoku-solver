@@ -149,7 +149,7 @@ public class Solver {
 		}
 	}
 
-	private void refreshGraph(int[][] graph, ArrayList<Action> acts) {
+	public void refreshGraph(int[][] graph, ArrayList<Action> acts) {
 
 		int[][] temporaryGraph = initializeInput();
 
