@@ -4,7 +4,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 /*	Version: 10/06/2021
  *	- Create this file, with some boilerplate code
@@ -15,10 +18,10 @@ import javax.swing.ImageIcon;
  *
  *	Version: 15/06/2021
  *	- Created drawNumbers which should draw all the numbers on the grid
+ *	- Started 'solveListener'
  *
  *	TODO
  *	- Add functionality for a thread to animate the algorithm.
- *	- Decide if this is going to be a full sudoku game or just a solver
  *
  *	^Note^ Here, grid means the graphical representation of the puzzle and graph means the int[][] in the 
  *	'Solver' class.
@@ -88,6 +91,14 @@ public class Board extends JPanel {
 		drawNumbers(g);
 
 		Toolkit.getDefaultToolkit().sync();
+	}
+
+	public class solveListener extends ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+		}
 	}
 
 	public int getWidth() { return G_WIDTH; }
