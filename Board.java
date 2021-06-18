@@ -1,5 +1,5 @@
 import javax.swing.JPanel;
-import java.awt.Toolkit
+import java.awt.Toolkit;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -52,7 +52,7 @@ public class Board extends JPanel {
 
 		Graphics2D g2d = (Graphics2D) g;
 
-		drawImage(gridImg, 0, 0, Color.WHITE, this);
+		g2d.drawImage(gridImg, 0, 0, Color.WHITE, this);
 	}
 
 	private void drawNumbers(Graphics g) {
@@ -67,7 +67,7 @@ public class Board extends JPanel {
 
 			for (int x = 0; x < 9; ++x) {
 
-				drawString(String.toString(puzzleGraph[y][x]), (G_WIDTH / (x + 1)) - numOffset, (G_HEIGHT / (y+1)) - numOffset);
+				g2d.drawString(Integer.toString(puzzleGraph[y][x]), (G_WIDTH / (x + 1)) - numOffset, (G_HEIGHT / (y + 1)) - numOffset);
 			}
 		}
 	}
