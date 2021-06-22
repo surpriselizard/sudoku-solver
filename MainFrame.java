@@ -38,7 +38,7 @@ public class MainFrame extends JFrame {
 		add(solveButton);
 
 		setResizable(false);
-		setSize(mainBoard.getWidth() + 50, mainBoard.getHeight() + 250);
+		setSize(mainBoard.getWidth(), mainBoard.getHeight() + 250);
 		setTitle("Sudoku Solver");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);

@@ -20,6 +20,9 @@ import javax.swing.ImageIcon;
  *	Version: 16/06/2021
  *	- Removed the field 'puzzleGraph' since it could easily be replaced as a local variable
  *
+ *	Version: 21/06/2021
+ *	- Adjusting coordinate calculation for numbers on the grid
+ *
  *	TODO
  *	- Add functionality for a thread to animate the algorithm.
  *
@@ -67,7 +70,7 @@ public class Board extends JPanel {
 
 			for (int x = 0; x < 9; ++x) {
 
-				g2d.drawString(Integer.toString(puzzleGraph[y][x]), (G_WIDTH / (x + 1)) - numOffset, (G_HEIGHT / (y + 1)) - numOffset);
+				g2d.drawString(Integer.toString(puzzleGraph[y][x]), (G_WIDTH / 9 * x) + numOffset, (G_HEIGHT / 9 * y) + numOffset);
 			}
 		}
 	}
