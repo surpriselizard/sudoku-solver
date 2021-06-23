@@ -23,11 +23,13 @@ import javax.swing.ImageIcon;
  *	Version: 21/06/2021
  *	- Adjusting coordinate calculation for numbers on the grid
  *
+ *	Version: 23/06/2021
+ *	- Numbers are sufficiently centered in each cell
+ *
  *	TODO
  *	- Add functionality for a thread to animate the algorithm.
  *
- *	^Note^ Here, grid means the graphical representation of the puzzle and graph means the int[][] in the 
- *	'Solver' class.
+ *	^Note^ Here, grid means the graphical representation of the puzzle and graph means the int[][] in the 'Solver' class.
  */
 
 public class Board extends JPanel {
@@ -63,14 +65,50 @@ public class Board extends JPanel {
 		Graphics2D g2d = (Graphics2D) g;
 
 		int[][] puzzleGraph = solver.getInputGraph();
-		int numOffset = (G_WIDTH / 9) / 2;
+
+		int xNumOffset = 26;
+		int yNumOffset = 33;
+		int smallBorderWidth = 2;
+		int largeBorderWidth = 5;
+		int cellWidth = 59;
 
 		// It is up to 9 beacuse that is the width/height of the array in terms of cells
 		for (int y = 0; y < 9; ++y) {
 
 			for (int x = 0; x < 9; ++x) {
 
-				g2d.drawString(Integer.toString(puzzleGraph[y][x]), (G_WIDTH / 9 * x) + numOffset, (G_HEIGHT / 9 * y) + numOffset);
+				int xCoord = (x * cellWidth) + (x * smallBorderWidth) + xNumOffset;
+				int yCoord = (y * cellWidth) + (y * smallBorderWidth) + yNumOffset;
+
+				if (x < 3)
+					xCoord += largeBorderWidth;
+				else if (x > 2 && x < 6) {
+
+					xCoord += (largeBorderWidth * 2);
+					xCoord -= smallBorderWidth;
+				}
+				else if (x > 5) {
+
+					xCoord += (largeBorderWidth * 3);
+					xCoord -= (smallBorderWidth * 2);
+					// Irregularity in the graph calls for a small cut in the xCoord
+					xCoord -= 1;
+				}
+
+				if (y < 3)
+					yCoord += largeBorderWidth;
+				else if (y > 2 && y < 6) {
+
+					yCoord += (largeBorderWidth * 2);
+					yCoord -= smallBorderWidth;
+				}
+				else if (y > 5) {
+
+					yCoord += (largeBorderWidth * 3);
+					yCoord -= (smallBorderWidth * 2);
+				}
+
+				g2d.drawString(Integer.toString(puzzleGraph[y][x]), xCoord, yCoord );
 			}
 		}
 	}
