@@ -1,10 +1,11 @@
 import javax.swing.JPanel;
+import javax.swing.ImageIcon;
 import java.awt.Toolkit;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Color;
-import javax.swing.ImageIcon;
+import java.awt.Font;
 
 /*	Version: 10/06/2021
  *	- Create this file, with some boilerplate code
@@ -26,8 +27,13 @@ import javax.swing.ImageIcon;
  *	Version: 23/06/2021
  *	- Numbers are sufficiently centered in each cell
  *
+ *	Version: 24/06/2021
+ *	- Enlarged the numbers for better visual clarity
+ *	- Zeros are now blank spaces
+ *
  *	TODO
- *	- Add functionality for a thread to animate the algorithm.
+ *	- When clicking on the grid, the user will be able to input numbers and when they are
+ *    done inputting numbers, they can press the solveButton and it will solve the grid.
  *
  *	^Note^ Here, grid means the graphical representation of the puzzle and graph means the int[][] in the 'Solver' class.
  */
@@ -38,12 +44,14 @@ public class Board extends JPanel {
 	private int G_HEIGHT;
 	private Solver solver;
 	private Image gridImg;
+	private int[][] puzzleGraph;
 
 	public Board() {
 
 		initBoard();
 
-		solver = new Solver();
+		solver = new Solver(this);
+		puzzleGraph = solver.getInputGraph();
 	}
 
 	private void initBoard() {
@@ -64,10 +72,10 @@ public class Board extends JPanel {
 
 		Graphics2D g2d = (Graphics2D) g;
 
-		int[][] puzzleGraph = solver.getInputGraph();
+		puzzleGraph = solver.getInputGraph();
 
-		int xNumOffset = 26;
-		int yNumOffset = 33;
+		int xNumOffset = 24;
+		int yNumOffset = 32;
 		int smallBorderWidth = 2;
 		int largeBorderWidth = 5;
 		int cellWidth = 59;
@@ -79,6 +87,9 @@ public class Board extends JPanel {
 
 				int xCoord = (x * cellWidth) + (x * smallBorderWidth) + xNumOffset;
 				int yCoord = (y * cellWidth) + (y * smallBorderWidth) + yNumOffset;
+				String num = Integer.toString(puzzleGraph[y][x]);
+
+				g2d.setFont(new Font("numFont", Font.PLAIN, 15));
 
 				if (x < 3)
 					xCoord += largeBorderWidth;
@@ -108,7 +119,12 @@ public class Board extends JPanel {
 					yCoord -= (smallBorderWidth * 2);
 				}
 
-				g2d.drawString(Integer.toString(puzzleGraph[y][x]), xCoord, yCoord );
+				if (num.equals("0")) {
+
+					num = " ";
+				}
+
+				g2d.drawString(num, xCoord, yCoord);
 			}
 		}
 	}
@@ -120,6 +136,11 @@ public class Board extends JPanel {
 
 		G_WIDTH = gridImg.getWidth(null);
 		G_HEIGHT = gridImg.getHeight(null);
+	}
+
+	public void solveGraph() {
+
+		solver.solveInput();
 	}
 
 	@Override

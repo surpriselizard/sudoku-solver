@@ -34,7 +34,7 @@ import java.awt.Color;
  *	  debugging and educational purposes
  */
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements ActionListener {
 
 	private Board mainBoard;
 	private JButton solveButton;
@@ -51,6 +51,7 @@ public class MainFrame extends JFrame {
 		setLayout(new GridBagLayout());
 
 		solveButton.setPreferredSize(new Dimension(140, 30));
+		solveButton.addActionListener(this);
 
 		add(mainBoard, new GridBagConstraints(
 					0,	// gridx
@@ -112,11 +113,10 @@ public class MainFrame extends JFrame {
 		setLocationRelativeTo(null);
 	}
 
-	public class solveListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			
-		}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	
+		mainBoard.solveGraph();
+		repaint();
 	}
 }

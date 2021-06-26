@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.Timer;
 
 /*
  *	Version: 11/06/2021
@@ -6,20 +9,30 @@ import java.util.ArrayList;
  *	
  *	Version: 15/06/2021
  *	- Overloaded 'initializeInput' with a function that is more easily used by other classes
+ *
+ *	Version: 24/06/2021
+ *	- Making some changes so that each step in algorithim can be displayed on the graph
+ *
+ *	Version: 25/06/2021
+ *	- Same thing as yesterday
+ *
+ *	TODO:
+ *	- Make the algorithim show on the grid while it is being done.
  */
 
-public class Solver {
+public class Solver implements ActionListener {
 
 	private final int SUDOKU_SIZE = 9;
 	private int[][] inputGraph;
+	private int i = -1;
+	private Board board;
+	private Timer timer;
 	
-	public Solver() {
+	public Solver(Board source) {
 		
 		inputGraph = initializeInput();
-
-		solveInput();
-
-		printGraph(inputGraph);
+		board = source;
+		timer = new Timer(500, this);
 	}
 
 	public void solveInput() {
@@ -28,10 +41,11 @@ public class Solver {
 		boolean solved = false;
 		boolean unSolvable = false;
 		boolean actionFound = false;
+		timer.start();
 
 		int x, y;
-		int i = 1;
 		int currentCell = 0;
+		i = 1;
 
 		for (y = 0; y < SUDOKU_SIZE;) {
 			
@@ -40,16 +54,39 @@ public class Solver {
 				actionFound = false;
 				refreshGraph(inputGraph, actions);
 				currentCell = inputGraph[y][x];
+				board.repaint();
+
 
 				if (currentCell == 0) {
 					
 					for (; i < SUDOKU_SIZE + 1; ++i) {
-						
+
+						actions.add(new Action(x, y, i));
+						refreshGraph(inputGraph, actions);
+						board.repaint();
+
+						try {
+							Thread.sleep(1);
+						} 
+						catch (InterruptedException ex) {
+							System.out.println(ex.getMessage());
+						}
+						finally {
+							System.out.println("The 'try-catch' is finished");
+						}
+
 						if (isCompatibleX(x, i) && isCompatibleY(y, i) && isCompatibleBlock(x, y, i)) {
 							actionFound = true;
-							actions.add(new Action(x, y, i));
 							i = 1;
+							
+
 							break;
+						}
+						else {
+
+							actions.remove(actions.size() - 1);
+							refreshGraph(inputGraph, actions);
+							board.repaint();
 						}
 					}
 
@@ -105,6 +142,8 @@ public class Solver {
 
 		if (unSolvable)
 			System.out.println("Graph is unsolvable.");
+
+		printGraph(inputGraph);
 	}
 
 	private int[][] initializeInput() {
@@ -167,26 +206,38 @@ public class Solver {
 
 	private boolean isCompatibleX(int xValue, int value) {
 
+		int counter = 0;
+
 		for (int yValue = 0; yValue < SUDOKU_SIZE; ++yValue) {
 
-			if (inputGraph[yValue][xValue] == value) {
-
-				return false;
-			}
+			if (inputGraph[yValue][xValue] == value)
+				counter++;
 		}
 
-		return true;
+		if (counter == 1)
+			return true;
+		else if (counter > 1)
+			return false;
+		else
+			return false;
 	}
 
 	private boolean isCompatibleY(int yValue, int value) {
+
+		int counter = 0;
 		
 		for (int xValue = 0; xValue < SUDOKU_SIZE; ++xValue) {
 
 			if (inputGraph[yValue][xValue] == value)
-				return false;
+				counter++;
 		}
 
-		return true;
+		if (counter == 1)
+			return true;
+		else if (counter > 1)
+			return false;
+		else 
+			return false;
 	}
 
 	private boolean isCompatibleBlock(int xValue, int yValue, int value) {
@@ -250,20 +301,33 @@ public class Solver {
 
 	private boolean childBoxCheck(int xMin, int xMax, int yMin, int yMax, int valueNum) {
 
+		int counter = 0;
+
 		for (int h = yMin; h <= yMax; ++h) {
 
 			for (int w = xMin; w <= xMax; ++w) {
 
-				if (inputGraph[h][w] == valueNum) {
-
-					return false;
-				}
+				if (inputGraph[h][w] == valueNum)
+					counter++;
 			}
 		}
-		return true;
+
+		if (counter == 1)
+			return true;
+		else if (counter > 1)
+			return false;
+		else 
+			return false;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		board.repaint();
 	}
 
 	public int[][] getInputGraph() { return inputGraph; }
+	public int getIterator() { return i; }
 
 	// DEBUG FUNCTION
 	private void makeGraphZeros(int[][] graph) {
